@@ -7,8 +7,8 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-	//	FileConverter fileConverter("","");
-
+		FileConverter fileConverter = new FileConverter("..\\Files\\Initial\\movies.dat","..\\Files\\Movie_Critic_Rating.txt");
+		fileConverter.ConvertFile();
 	}
 
 }

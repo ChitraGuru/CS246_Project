@@ -2,6 +2,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.DataInputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 
 public class FileConverter {
 
@@ -20,34 +24,38 @@ public class FileConverter {
 	{
 		boolean retVal = true;
 		
-		FileReader sourceFile;
-		FileReader outputFile;
-		//Check if input file exists
 		try
 		{
-			sourceFile = new FileReader(m_InputFileName);
+			FileInputStream sourceFile;
+			FileReader outputFile;
+			//Check if input file exists
+			sourceFile = new FileInputStream(m_InputFileName);
+						
+			
+			//Check if output file exists
+			outputFile = new FileReader(m_OutputFileName);
+			
+			
+			//Open input file
+			DataInputStream inDataStream= new DataInputStream(sourceFile);
+			BufferedReader bufferedInDataStream = new BufferedReader(new InputStreamReader(inDataStream));
+			//Read the file line by line
+			String strLine;
+			while ((strLine = bufferedInDataStream.readLine()) != null)   
+			{
+			  // Print the content on the console
+				System.out.println(strLine);
+			}
 		}
 		catch( FileNotFoundException e)
 		{
 			System.out.println("source file not found");
 		}
-		
-		//Check if output file exists
-		try
+		catch( Exception e)
 		{
-			outputFile = new FileReader(m_OutputFileName);
-		}
-		catch( FileNotFoundException e)
-		{
-			System.out.println("output file not found");
+			System.out.println("Error creating dataInputStream");
 		}
 		
-		//Open input file
-		
-		//Create object struct
-		//While !eof of input read  the next data element and populate the struct
-		
-		//Once struct is populated, write to output file
 		
 		
 		return retVal;
