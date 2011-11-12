@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 
@@ -27,25 +28,60 @@ public class FileConverter {
 		try
 		{
 			FileInputStream sourceFile;
-			FileReader outputFile;
+
 			//Check if input file exists
 			sourceFile = new FileInputStream(m_InputFileName);
 						
 			
-			//Check if output file exists
-			outputFile = new FileReader(m_OutputFileName);
-			
-			
 			//Open input file
 			DataInputStream inDataStream= new DataInputStream(sourceFile);
 			BufferedReader bufferedInDataStream = new BufferedReader(new InputStreamReader(inDataStream));
+			
+			//Output file writer
+			BufferedWriter bufferedOutDataStream = new BufferedWriter(new FileWriter(m_OutputFileName));
+		    
 			//Read the file line by line
 			String strLine;
 			while ((strLine = bufferedInDataStream.readLine()) != null)   
 			{
-			  // Print the content on the console
-				System.out.println(strLine);
+				//Split the line by the delimiter
+				String[] result = strLine.split("\\t");
+			
+				//0 is ID
+				int movieID = Integer.parseInt(result[0]);
+			    //7 is Critics rating
+				try
+				{
+					Double criticsID = Double.parseDouble(result[7]);
+				
+					//8 is Number of reviews
+				    if( Integer.parseInt( result[8]) == 0 )
+				    	criticsID = -1.0;				    	
+				    
+				    String strToWrite = Integer.toString(movieID);
+				    strToWrite = strToWrite.concat("\t");
+				    strToWrite =strToWrite.concat(Double.toString(criticsID));
+				    
+				    System.out.println(strToWrite);
+				    
+				    bufferedOutDataStream.write(strToWrite);
+				}
+				catch( Exception e )
+				{
+					 String strToWrite = Integer.toString(movieID);
+					 strToWrite = strToWrite.concat("\t");
+					 strToWrite = strToWrite.concat(Double.toString(-1.0));
+					 System.out.println(strToWrite);
+				     bufferedOutDataStream.write(strToWrite);
+					
+				}
+			    bufferedOutDataStream.newLine();
 			}
+			 if (bufferedOutDataStream != null) 
+			 {
+				 bufferedOutDataStream.flush();
+				 bufferedOutDataStream.close();
+             }
 		}
 		catch( FileNotFoundException e)
 		{
@@ -53,7 +89,7 @@ public class FileConverter {
 		}
 		catch( Exception e)
 		{
-			System.out.println("Error creating dataInputStream");
+			System.out.println("Error");
 		}
 		
 		
